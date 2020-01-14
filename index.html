@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Casamento do Ano</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <link href='https://fonts.googleapis.com/css?family=Aguafina Script' rel='stylesheet'>
+    <Style>
+        body {
+     background-image: url("bloggif_5e1df63ebdc0a.gif");
+     background-attachment: fixed;
+      background-size:100% auto;
+      font-family: 'Aguafina Script';font-size: 50px; color:gold; text-align: center;
+      text-shadow: 1px 1px black;
+      word-spacing: 10px;
+
+
+    }
+    
+    </Style>
+
+<body>
+    <audio id="youtube" autoplay controls loop></audio>
+
+    <h1> 
+         Jonh Peter and Jully Anne's wedding 
+    </h1>
+</body>
+
+<p id="demo"></p>
+
+<script>
+var countDownDate = new Date("feb 5, 2020 15:37:25").getTime();
+
+var x = setInterval(function() {
+
+  var now = new Date().getTime();
+
+  var distance = countDownDate - now;
+
+  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  document.getElementById("demo").innerHTML = days + "d " + hours + "h "
+  + minutes + "m " + seconds + "s ";
+
+  if (distance < 0) {
+    clearInterval(x);
+    document.getElementById("demo").innerHTML = "EXPIRED";
+  }
+}, 1000);
+</script>
+
+<script>
+    var vid = "0Brm0KueV_k",
+    audio_streams = {},
+    audio_tag = document.getElementById('youtube');
+
+fetch("https://"+vid+"-focus-opensocial.googleusercontent.com/gadgets/proxy?container=none&url=https%3A%2F%2Fwww.youtube.com%2Fget_video_info%3Fvideo_id%3D" + vid).then(response => {
+    if (response.ok) {
+        response.text().then(data => {
+
+            var data = parse_str(data),
+                streams = (data.url_encoded_fmt_stream_map + ',' + data.adaptive_fmts).split(',');
+
+            streams.forEach(function(s, n) {
+                var stream = parse_str(s),
+                    itag = stream.itag * 1,
+                    quality = false;
+                console.log(stream);
+                switch (itag) {
+                    case 139:
+                        quality = "48kbps";
+                        break;
+                    case 140:
+                        quality = "128kbps";
+                        break;
+                    case 141:
+                        quality = "256kbps";
+                        break;
+                }
+                if (quality) audio_streams[quality] = stream.url;
+            });
+
+            console.log(audio_streams);
+
+            audio_tag.src = audio_streams['128kbps'];
+            audio_tag.play();
+        })
+    }
+});
+
+function parse_str(str) {
+    return str.split('&').reduce(function(params, param) {
+        var paramSplit = param.split('=').map(function(value) {
+            return decodeURIComponent(value.replace('+', ' '));
+        });
+        params[paramSplit[0]] = paramSplit[1];
+        return params;
+    }, {});
+}
+</script>
+
+
